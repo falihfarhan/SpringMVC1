@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:mvc="http://www.springframework.org/schema/mvc"
+       xmlns:tx="http://www.springframework.org/schema/tx" xmlns:bean="http://www.springframework.org/schema/c"
+       xmlns:beans="http://www.springframework.org/schema/p"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.2.xsd
+		http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc-4.2.xsd
+		http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-4.2.xsd">
+
+    <bean class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+        <property name="location">
+            <value>classpath:application.properties</value>
+        </property>
+    </bean>
+
+    <bean id="messageSource" class="org.springframework.context.support.ReloadableResourceBundleMessageSource">
+        <property name="basename" value="classpath:messages"/>
+                <property name="fallbackToSystemLocale" value="false"/>
+    </bean>
+
+
+    <bean id="datasource" class="org.apache.commons.dbcp.BasicDataSource">
+        <property name="driverClassName" value="${spring.datasource.driverClassName}"/>
+        <property name="url" value="${spring.datasource.url}"/>
+        <property name="username" value="${spring.datasource.username}"/>
+        <property name="password" value="${spring.datasource.password}"/>
+    </bean>
+
+    <bean id="jt" class="org.springframework.jdbc.core.JdbcTemplate">
+        <property name="dataSource" ref="datasource"></property>
+    </bean>
+
+    <bean id="dao" class="com.experiment.springmvc.repository.UserDaoImpl">
+        <property name="template" ref="jt"></property>
+    </bean>
+
+    <bean id="service" class="com.experiment.springmvc.service.UserServiceImpl">
+        <property name="dao" ref="dao"></property>
+    </bean>
+
+    <bean id="userValidation" class="com.experiment.springmvc.validation.UserValidation"/>
+
+</beans>
